@@ -1,4 +1,5 @@
 ﻿using ExamApp.Domain.Entities.Common;
+using ExamApp.Domain.Enums;
 
 namespace ExamApp.Domain.Entities
 {

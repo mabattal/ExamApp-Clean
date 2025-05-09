@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamApp.Domain", "ExamApp.Domain\ExamApp.Domain.csproj", "{03635706-9B75-4389-938E-E635989968F7}"
 EndProject
@@ -55,5 +55,8 @@ Global
 		{F4C9ECAF-2F2E-4E16-820D-9BE3F37545B0} = {64EE88C9-7B99-469C-B62A-2427E287EA5A}
 		{2307F127-57D8-4ED4-92DA-D0B964926EF1} = {C68B99FC-D443-4622-BC84-DB616B9B1E17}
 		{5DD0640D-2200-4C4B-80D8-41051ACA0B0E} = {2307F127-57D8-4ED4-92DA-D0B964926EF1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A9202C9-6109-4DB8-86AF-4B45B0BB598E}
 	EndGlobalSection
 EndGlobal

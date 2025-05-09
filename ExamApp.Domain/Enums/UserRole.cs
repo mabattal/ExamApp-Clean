@@ -1,4 +1,4 @@
-﻿namespace ExamApp.Domain.Entities.Common
+﻿namespace ExamApp.Domain.Enums
 {
     public enum UserRole
     {
