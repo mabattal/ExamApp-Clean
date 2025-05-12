@@ -103,11 +103,11 @@ ExamApp.http dosyasını kullanarak VS Code gibi editörlerde test yapılabilir.
 
 
 
-🌐 Frontend (Angular) uygulamasına [buradan](https://github.com/mabattal/ExamApp-UI-A)
+🌐 Frontend (Angular) projesine [buradan](https://github.com/mabattal/ExamApp-UI-A)
  ulaşabilirsiniz.
 
 
-💡 Katkı Sağlamak
-Proje herkese açıktır. Pull request'ler ve issue bildirimleri memnuniyetle karşılanır.
+
+💡 Proje herkese açıktır. Pull request'ler ve issue bildirimleri memnuniyetle karşılanır.
 
 
