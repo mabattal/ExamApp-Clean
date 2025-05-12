@@ -1,6 +1,7 @@
 # 📝 ExamApp - Online Sınav Sistemi
 
 **ExamApp**, modern yazılım mimarileri ve güvenlik standartları kullanılarak geliştirilmiş, çok rollü (Admin, Instructor, Student) bir çevrim içi sınav uygulamasıdır. Kullanıcılar sınav oluşturabilir, katılabilir ve sonuçlarını görüntüleyebilir. Proje backend tarafında **.NET 8 Web API** ile önce N-Tier achitecture ile geliştirilmiş daha sonra clean architecture'a dönüştürülmüştür.
+
 N-Tier Architecture reposuna [buradan](https://github.com/mabattal/ExamApp-N-Tier) ulaşabilirsiniz.
 
 ---
