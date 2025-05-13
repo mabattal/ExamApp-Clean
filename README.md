@@ -4,6 +4,9 @@
 
 N-Tier Architecture reposuna [buradan](https://github.com/mabattal/ExamApp-N-Tier) ulaşabilirsiniz.
 
+Frontend (Angular) projesine [buradan](https://github.com/mabattal/ExamApp-UI-A)
+ ulaşabilirsiniz.
+
 ---
 
 ## 🚀 Özellikler
@@ -100,11 +103,6 @@ ExamApp.http dosyasını kullanarak VS Code gibi editörlerde test yapılabilir.
 🌐 API'ler REST mimarisine uygun olarak tasarlanmıştır.
 
 ⚠️ CORS ayarları Program.cs içinde yapılandırılmıştır.
-
-
-
-🌐 Frontend (Angular) projesine [buradan](https://github.com/mabattal/ExamApp-UI-A)
- ulaşabilirsiniz.
 
 
 
