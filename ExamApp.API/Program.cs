@@ -1,7 +1,10 @@
 using ExamApp.API.ExceptionHandlers;
 using ExamApp.API.Extensions;
 using ExamApp.API.Filters;
+using ExamApp.Application.Contracts.Authentication;
 using ExamApp.Application.Extensions;
+using ExamApp.Authentication;
+using ExamApp.Authentication.Extensions;
 using ExamApp.Persistence.Extensions;
 using Microsoft.OpenApi.Models;
 
@@ -49,8 +52,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Repository ve Service'leri ekledik(Extension olarak)
-builder.Services.AddRepositories(builder.Configuration).AddServices(builder.Configuration);
+//Repository'leri, Service'leri ve jwt ayarlarýný ekledik(Extension olarak)
+builder.Services
+    .AddRepositories(builder.Configuration)
+    .AddServices(builder.Configuration)
+    .AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddExceptionHandler<CriticalExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -68,6 +74,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.SeedDatabase();
 
 app.UseHttpsRedirection();
 

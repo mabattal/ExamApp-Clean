@@ -1,13 +1,14 @@
 ﻿using System.Net;
-using ExamApp.Application.Authentication.Dto;
-using ExamApp.Application.Contracts;
+using ExamApp.Application;
+using ExamApp.Application.Contracts.Authentication;
+using ExamApp.Application.Contracts.Authentication.Dto;
 using ExamApp.Application.Contracts.Persistence;
 using ExamApp.Domain.Entities;
 using ExamApp.Domain.Enums;
 
-namespace ExamApp.Application.Authentication
+namespace ExamApp.Authentication
 {
-    public class AuthService(IUserRepository userRepository, JwtService jwtService, IUnitOfWork unitOfWork) : IAuthService
+    public class AuthService(IUserRepository userRepository, IJwtService jwtService, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork) : IAuthService
     {
         public async Task<ServiceResult<UserTokenResponseDto>> ValidateUserAsync(string email, string password)
         {
@@ -16,7 +17,7 @@ namespace ExamApp.Application.Authentication
             {
                 return ServiceResult<UserTokenResponseDto>.Fail("Email not found.", HttpStatusCode.Unauthorized);
             }
-            if (!PasswordHasher.Verify(password, user.Password))
+            if (!passwordHasher.Verify(password, user.Password))
             {
                 return ServiceResult<UserTokenResponseDto>.Fail("Invalid password.", HttpStatusCode.Unauthorized);
             }
@@ -34,7 +35,7 @@ namespace ExamApp.Application.Authentication
                 return ServiceResult.Fail("This email is already in use.", HttpStatusCode.BadRequest);
             }
 
-            var hashedPassword = PasswordHasher.Hash(request.Password);
+            var hashedPassword = passwordHasher.Hash(request.Password);
 
             var newUser = new User
             {

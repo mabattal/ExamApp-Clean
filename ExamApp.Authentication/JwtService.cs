@@ -1,12 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using ExamApp.Application.Contracts.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
-namespace ExamApp.Application.Authentication
+namespace ExamApp.Authentication
 {
-    public class JwtService(IConfiguration configuration)
+    public class JwtService(IConfiguration configuration) : IJwtService
     {
         public string GenerateToken(int userId, string role)
         {

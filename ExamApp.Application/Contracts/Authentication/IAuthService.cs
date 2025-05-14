@@ -1,6 +1,6 @@
-﻿using ExamApp.Application.Authentication.Dto;
+﻿using ExamApp.Application.Contracts.Authentication.Dto;
 
-namespace ExamApp.Application.Contracts
+namespace ExamApp.Application.Contracts.Authentication
 {
     public interface IAuthService
     {

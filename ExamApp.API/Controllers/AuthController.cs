@@ -1,12 +1,11 @@
-﻿using ExamApp.Application.Authentication;
-using ExamApp.Application.Authentication.Dto;
-using ExamApp.Application.Contracts;
+﻿using ExamApp.Application.Contracts.Authentication;
+using ExamApp.Application.Contracts.Authentication.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExamApp.API.Controllers
 {
-    public class AuthController(IAuthService authService, JwtService jwtService) : CustomBaseController
+    public class AuthController(IAuthService authService) : CustomBaseController
     {
         [AllowAnonymous]
         [HttpPost("Login")]

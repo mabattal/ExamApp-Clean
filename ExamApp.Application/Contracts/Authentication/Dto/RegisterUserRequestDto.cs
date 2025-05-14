@@ -1,4 +1,4 @@
-﻿namespace ExamApp.Application.Authentication.Dto
+﻿namespace ExamApp.Application.Contracts.Authentication.Dto
 {
     public record RegisterUserRequestDto(
         string Email,

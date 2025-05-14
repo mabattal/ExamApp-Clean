@@ -38,12 +38,6 @@ namespace ExamApp.Persistence.Extensions
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            // **Veritabanı Seed İşlemi**
-            using (var scope = services.BuildServiceProvider().CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                AppDbContextSeed.SeedAsync(dbContext).Wait();
-            }
 
             return services;
         }

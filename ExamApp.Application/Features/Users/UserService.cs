@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using AutoMapper;
-using ExamApp.Application.Authentication;
+using ExamApp.Application.Contracts.Authentication;
 using ExamApp.Application.Contracts.Persistence;
 using ExamApp.Application.Features.Users.Create;
 using ExamApp.Application.Features.Users.Dto;
@@ -13,7 +13,8 @@ namespace ExamApp.Application.Features.Users
     public class UserService(
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
-        IMapper mapper) : IUserService
+        IMapper mapper,
+        IPasswordHasher passwordHasher) : IUserService
     {
         public async Task<ServiceResult<List<UserResponseDto>>> GetAllAsync()
         {
@@ -90,7 +91,7 @@ namespace ExamApp.Application.Features.Users
                 return ServiceResult<CreateUserResponseDto>.Fail("E-mail address already exists", HttpStatusCode.BadRequest);
             }
 
-            var hashedPassword = PasswordHasher.Hash(createUserRequest.Password);
+            var hashedPassword = passwordHasher.Hash(createUserRequest.Password);
             var user = mapper.Map<User>(createUserRequest);
             user.IsDeleted = false;
             user.Password = hashedPassword;
@@ -114,7 +115,7 @@ namespace ExamApp.Application.Features.Users
                 return ServiceResult.Fail("E-mail address already exists", HttpStatusCode.BadRequest);
             }
 
-            var hashedPassword = PasswordHasher.Hash(updateUserRequest.Password);
+            var hashedPassword = passwordHasher.Hash(updateUserRequest.Password);
             user = mapper.Map(updateUserRequest, user);
             user.Password = hashedPassword;
 

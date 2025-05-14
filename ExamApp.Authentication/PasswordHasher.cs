@@ -1,11 +1,12 @@
 ﻿using System.Security.Cryptography;
+using ExamApp.Application.Contracts.Authentication;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace ExamApp.Application.Authentication
+namespace ExamApp.Authentication
 {
-    public static class PasswordHasher
+    public class PasswordHasher : IPasswordHasher
     {
-        public static string Hash(string password)
+        public string Hash(string password)
         {
             byte[] salt = new byte[16];
             using (var rng = RandomNumberGenerator.Create())
@@ -18,7 +19,7 @@ namespace ExamApp.Application.Authentication
             return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
         }
 
-        public static bool Verify(string password, string hashedPassword)
+        public bool Verify(string password, string hashedPassword)
         {
             var parts = hashedPassword.Split(':');
             if (parts.Length != 2)
