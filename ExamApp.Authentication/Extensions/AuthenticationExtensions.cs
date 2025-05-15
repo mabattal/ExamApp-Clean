@@ -4,12 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ExamApp.Application.Contracts.Authentication;
+using Microsoft.AspNetCore.Builder;
 
 namespace ExamApp.Authentication.Extensions
 {
     public static class AuthenticationExtensions
     {
-        public static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthenticationServices(this IServiceCollection services,
+            IConfiguration configuration)
         {
             // Authentication servisleri
             services.AddScoped<IJwtService, JwtService>();
@@ -44,6 +46,13 @@ namespace ExamApp.Authentication.Extensions
             services.AddAuthorization();
 
             return services;
+        }
+
+        public static IApplicationBuilder UseCustomAuthenticationServices(this IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+            app.UseAuthorization();
+            return app;
         }
     }
 }

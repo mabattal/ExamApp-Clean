@@ -7,7 +7,7 @@ namespace ExamApp.Persistence.Extensions
 {
     public static class DbInitializerExtensions
     {
-        public static IApplicationBuilder SeedDatabase(this IApplicationBuilder app)
+        public static IApplicationBuilder UseCustomSeedDatabase(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {

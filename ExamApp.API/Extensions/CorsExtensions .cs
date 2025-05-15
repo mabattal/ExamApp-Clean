@@ -1,9 +1,10 @@
 ﻿namespace ExamApp.API.Extensions
 {
+    //Cors ayarlarını ekledik. Bu ayarı yapma sebebimiz, client tarafında farklı bir domainde çalışan uygulamaların bu apiye erişebilmesi için
     //tüm domainlerden gelen istekleri kabul etmesi için
     public static class CorsExtensions
     {
-        public static IServiceCollection AddCustomCors(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCustomCors(this IServiceCollection services)
         {
             services.AddCors(options =>
             {
