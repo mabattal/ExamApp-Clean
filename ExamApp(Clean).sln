@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamApp.API", "ExamApp.API\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamApp.Authentication", "ExamApp.Authentication\ExamApp.Authentication.csproj", "{185C46CF-B396-4104-9832-2BF588B28546}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamApp.Caching", "ExamApp.Caching\ExamApp.Caching.csproj", "{621D339C-18E7-498B-8BE9-E8B88D988C87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{185C46CF-B396-4104-9832-2BF588B28546}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{185C46CF-B396-4104-9832-2BF588B28546}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{185C46CF-B396-4104-9832-2BF588B28546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{621D339C-18E7-498B-8BE9-E8B88D988C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{621D339C-18E7-498B-8BE9-E8B88D988C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{621D339C-18E7-498B-8BE9-E8B88D988C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{621D339C-18E7-498B-8BE9-E8B88D988C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{2307F127-57D8-4ED4-92DA-D0B964926EF1} = {C68B99FC-D443-4622-BC84-DB616B9B1E17}
 		{5DD0640D-2200-4C4B-80D8-41051ACA0B0E} = {2307F127-57D8-4ED4-92DA-D0B964926EF1}
 		{185C46CF-B396-4104-9832-2BF588B28546} = {64EE88C9-7B99-469C-B62A-2427E287EA5A}
+		{621D339C-18E7-498B-8BE9-E8B88D988C87} = {64EE88C9-7B99-469C-B62A-2427E287EA5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A9202C9-6109-4DB8-86AF-4B45B0BB598E}

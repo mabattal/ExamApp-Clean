@@ -1,10 +1,10 @@
 using ExamApp.API.ExceptionHandlers;
 using ExamApp.API.Extensions;
 using ExamApp.API.Filters;
-using ExamApp.Application.Contracts.Authentication;
+using ExamApp.Application.Contracts.Caching;
 using ExamApp.Application.Extensions;
-using ExamApp.Authentication;
 using ExamApp.Authentication.Extensions;
+using ExamApp.Caching;
 using ExamApp.Persistence.Extensions;
 using Microsoft.OpenApi.Models;
 
@@ -60,6 +60,9 @@ builder.Services
 
 builder.Services.AddExceptionHandler<CriticalExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ICacheService, CacheService>();
 
 //Cors ayarlarýný ekledik. Bu ayarý yapma sebebimiz, client tarafýnda farklý bir domainde çalýþan uygulamalarýn bu apiye eriþebilmesi için
 builder.Services.AddCustomCors(builder.Configuration);
