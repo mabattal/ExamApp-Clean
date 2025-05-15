@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using AutoMapper;
 using ExamApp.Application.Contracts;
+using ExamApp.Application.Contracts.Caching;
 using ExamApp.Application.Contracts.Persistence;
 using ExamApp.Application.Features.Exams.Create;
 using ExamApp.Application.Features.Exams.Dto;
@@ -15,8 +16,14 @@ namespace ExamApp.Application.Features.Exams
         IUserService userService, 
         IUnitOfWork unitOfWork, 
         IDateTimeUtcConversionService dateTimeService,
-        IMapper mapper) : IExamService
+        IMapper mapper,
+        ICacheService cacheService) : IExamService
     {
+        private const string GetByInstructorCacheKey = "GetByInstructorCacheKey";
+        private const string ActiveExamsCacheKey = "ActiveExamsCacheKey";
+        private const string PastExamsCacheKey = "PastExamsCacheKey";
+        private const string UpcomingExamsCacheKey = "UpcomingExamsCacheKey";
+
         public async Task<ServiceResult<CreateExamResponseDto>> AddAsync(CreateExamRequestDto examRequest, int userId)
         {
             var instructor = await userService.GetInstructorByIdAsync(userId);
@@ -122,6 +129,12 @@ namespace ExamApp.Application.Features.Exams
                 return ServiceResult<List<ExamWithQuestionsResponseDto>>.Fail(instructor.ErrorMessage!, instructor.Status);
             }
 
+            var examResponse = await cacheService.GetAsync<List<ExamWithQuestionsResponseDto>>(GetByInstructorCacheKey + instructorId);
+            if (examResponse is not null)
+            {
+                return ServiceResult<List<ExamWithQuestionsResponseDto>>.Success(examResponse);
+            }
+
             var exams = await examRepository.GetByInstructorAsync(instructorId);
             var examAsDto = exams.Select(e =>
             {
@@ -133,11 +146,18 @@ namespace ExamApp.Application.Features.Exams
                 return dto;
             }).ToList();
 
+            await cacheService.AddAsync(GetByInstructorCacheKey + instructorId, examAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<ExamWithQuestionsResponseDto>>.Success(examAsDto);
         }
 
         public async Task<ServiceResult<List<ExamWithInstructorResponseDto>>> GetActiveExamsAsync()
         {
+            var examResponse = await cacheService.GetAsync<List<ExamWithInstructorResponseDto>>(ActiveExamsCacheKey);
+            if (examResponse is not null)
+            {
+                return ServiceResult<List<ExamWithInstructorResponseDto>>.Success(examResponse);
+            }
+
             var exams = await examRepository.GetActiveExamsAsync();
             if (!exams.Any())
             {
@@ -154,11 +174,18 @@ namespace ExamApp.Application.Features.Exams
                 return dto;
             }).ToList();
 
+            await cacheService.AddAsync(ActiveExamsCacheKey, examAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<ExamWithInstructorResponseDto>>.Success(examAsDto);
         }
 
         public async Task<ServiceResult<List<ExamWithInstructorResponseDto>>> GetPastExamsAsync()
         {
+            var examResponse = await cacheService.GetAsync<List<ExamWithInstructorResponseDto>>(PastExamsCacheKey);
+            if (examResponse is not null)
+            {
+                return ServiceResult<List<ExamWithInstructorResponseDto>>.Success(examResponse);
+            }
+
             var exams = await examRepository.GetPastExamsAsync();
             if (!exams.Any())
             {
@@ -175,11 +202,18 @@ namespace ExamApp.Application.Features.Exams
                 return dto;
             }).ToList();
 
+            await cacheService.AddAsync(PastExamsCacheKey, examAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<ExamWithInstructorResponseDto>>.Success(examAsDto);
         }
 
         public async Task<ServiceResult<List<ExamWithInstructorResponseDto>>> GetUpcomingExamsAsync()
         {
+            var examResponse = await cacheService.GetAsync<List<ExamWithInstructorResponseDto>>(UpcomingExamsCacheKey);
+            if (examResponse is not null)
+            {
+                return ServiceResult<List<ExamWithInstructorResponseDto>>.Success(examResponse);
+            }
+
             var exams = await examRepository.GetUpcomingExamsAsync();
             if (!exams.Any())
             {
@@ -196,6 +230,7 @@ namespace ExamApp.Application.Features.Exams
                 return dto;
             }).ToList();
 
+            await cacheService.AddAsync(UpcomingExamsCacheKey, examAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<ExamWithInstructorResponseDto>>.Success(examAsDto);
         }
 
