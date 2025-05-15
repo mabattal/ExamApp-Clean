@@ -1,11 +1,12 @@
-﻿using System.Net;
-using AutoMapper;
+﻿using AutoMapper;
+using ExamApp.Application.Contracts.Caching;
 using ExamApp.Application.Contracts.Persistence;
 using ExamApp.Application.Features.Exams;
 using ExamApp.Application.Features.Questions.Create;
 using ExamApp.Application.Features.Questions.Dto;
 using ExamApp.Application.Features.Questions.Update;
 using ExamApp.Domain.Entities;
+using System.Net;
 
 namespace ExamApp.Application.Features.Questions
 {
@@ -13,8 +14,11 @@ namespace ExamApp.Application.Features.Questions
         IQuestionRepository questionRepository,
         IExamService examService,
         IUnitOfWork unitOfWork,
-        IMapper mapper) : IQuestionService
+        IMapper mapper,
+        ICacheService cacheService) : IQuestionService
     {
+        private const string GetByExamIdCacheKey = "GetByExamIdCacheKey";
+        private const string GetByExamIdWithCorrectAnswerCacheKey = "GetByExamIdWithCorrectAnswer";
         public async Task<ServiceResult<QuestionResponseDto?>> GetByIdAsync(int id)
         {
             var question = await questionRepository.GetByIdAsync(id);
@@ -128,6 +132,12 @@ namespace ExamApp.Application.Features.Questions
                 return ServiceResult<List<QuestionResponseWithoutCorrectAnswerDto>>.Fail(exam.ErrorMessage!, exam.Status);
             }
 
+            var questionResponse = await cacheService.GetAsync<List<QuestionResponseWithoutCorrectAnswerDto>>(GetByExamIdCacheKey + examId);
+            if (questionResponse is not null)
+            {
+                return ServiceResult<List<QuestionResponseWithoutCorrectAnswerDto>>.Success(questionResponse);
+            }
+
             var questions = await questionRepository.GetByExamIdAsync(examId);
             if (!questions.Any())
             {
@@ -135,6 +145,7 @@ namespace ExamApp.Application.Features.Questions
             }
 
             var questionsAsDto = mapper.Map<List<QuestionResponseWithoutCorrectAnswerDto>>(questions);
+            await cacheService.AddAsync(GetByExamIdCacheKey + examId, questionsAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<QuestionResponseWithoutCorrectAnswerDto>>.Success(questionsAsDto);
         }
 
@@ -146,6 +157,12 @@ namespace ExamApp.Application.Features.Questions
                 return ServiceResult<List<QuestionResponseDto>>.Fail(exam.ErrorMessage!, exam.Status);
             }
 
+            var questionResponse = await cacheService.GetAsync<List<QuestionResponseDto>>(GetByExamIdWithCorrectAnswerCacheKey + examId);
+            if (questionResponse is not null)
+            {
+                return ServiceResult<List<QuestionResponseDto>>.Success(questionResponse);
+            }
+
             var questions = await questionRepository.GetByExamIdAsync(examId);
             if (!questions.Any())
             {
@@ -153,6 +170,7 @@ namespace ExamApp.Application.Features.Questions
             }
 
             var questionsAsDto = mapper.Map<List<QuestionResponseDto>>(questions);
+            await cacheService.AddAsync(GetByExamIdWithCorrectAnswerCacheKey + examId, questionsAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<QuestionResponseDto>>.Success(questionsAsDto);
         }
     }
