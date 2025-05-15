@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using AutoMapper;
 using ExamApp.Application.Contracts.Authentication;
+using ExamApp.Application.Contracts.Caching;
 using ExamApp.Application.Contracts.Persistence;
 using ExamApp.Application.Features.Users.Create;
 using ExamApp.Application.Features.Users.Dto;
@@ -14,29 +15,52 @@ namespace ExamApp.Application.Features.Users
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IPasswordHasher passwordHasher) : IUserService
+        IPasswordHasher passwordHasher,
+        ICacheService cacheService) : IUserService
     {
+        private const string PagedUserListCacheKey = "PagedUserListCacheKey";
+
         public async Task<ServiceResult<List<UserResponseDto>>> GetAllAsync()
         {
             var users = await userRepository.GetAllAsync();
             var userAsDto = mapper.Map<List<UserResponseDto>>(users);
 
-            //manuel mapping
+            #region Manuel mapping
+
             //var userAsDto = users.Select(u => new UserResponseDto(u.UserId, u.FullName, u.Email, u.Role, u.IsDeleted)).ToList();
+
+            #endregion
 
             return ServiceResult<List<UserResponseDto>>.Success(userAsDto);
         }
 
         public async Task<ServiceResult<List<UserResponseDto>>> GetPagedAllAsync(int pageNumber, int pageSize)
         {
+            #region sayfalama hesabı
+
             // pageNumber - pageSize
             // 1 - 10 => 0, 10  kayıt    skip(0).take(10)
             // 2 - 10 => 11, 20 kayıt    skip(10).take(10)
             // 3 - 10 => 21, 30 kayıt    skip(20).take(10)
             // 4 - 10 => 31, 40 kayıt    skip(30).take(10)
 
+            #endregion
+
+            //cache aside design pattern uygulama
+            // 1. any cache
+            // 2. if not cache => get data from db
+            // 3. set cache
+
+            var pagedUserListAsCached = await cacheService.GetAsync<List<UserResponseDto>>(PagedUserListCacheKey + pageNumber + pageSize);
+            if (pagedUserListAsCached is not null)
+            {
+                return ServiceResult<List<UserResponseDto>>.Success(pagedUserListAsCached);
+            }
+
             var users = await userRepository.GetAllPagedAsync(pageNumber, pageSize);
             var userAsDto = mapper.Map<List<UserResponseDto>>(users);
+
+            await cacheService.AddAsync(PagedUserListCacheKey + pageNumber + pageSize, userAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<UserResponseDto>>.Success(userAsDto);
         }
 
@@ -87,7 +111,8 @@ namespace ExamApp.Application.Features.Users
         public async Task<ServiceResult<CreateUserResponseDto>> AddAsync(CreateUserRequestDto createUserRequest)
         {
             var existingUser = await userRepository.AnyAsync(u => u.Email == createUserRequest.Email);
-            if (existingUser) {
+            if (existingUser)
+            {
                 return ServiceResult<CreateUserResponseDto>.Fail("E-mail address already exists", HttpStatusCode.BadRequest);
             }
 
