@@ -19,7 +19,6 @@ namespace ExamApp.Application.Features.Exams
         IMapper mapper,
         ICacheService cacheService) : IExamService
     {
-        private const string GetByInstructorCacheKey = "GetByInstructorCacheKey";
         private const string ActiveExamsCacheKey = "ActiveExamsCacheKey";
         private const string PastExamsCacheKey = "PastExamsCacheKey";
         private const string UpcomingExamsCacheKey = "UpcomingExamsCacheKey";
@@ -129,12 +128,6 @@ namespace ExamApp.Application.Features.Exams
                 return ServiceResult<List<ExamWithQuestionsResponseDto>>.Fail(instructor.ErrorMessage!, instructor.Status);
             }
 
-            var examResponse = await cacheService.GetAsync<List<ExamWithQuestionsResponseDto>>(GetByInstructorCacheKey + instructorId);
-            if (examResponse is not null)
-            {
-                return ServiceResult<List<ExamWithQuestionsResponseDto>>.Success(examResponse);
-            }
-
             var exams = await examRepository.GetByInstructorAsync(instructorId);
             var examAsDto = exams.Select(e =>
             {
@@ -146,7 +139,6 @@ namespace ExamApp.Application.Features.Exams
                 return dto;
             }).ToList();
 
-            await cacheService.AddAsync(GetByInstructorCacheKey + instructorId, examAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<ExamWithQuestionsResponseDto>>.Success(examAsDto);
         }
 
