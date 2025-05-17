@@ -144,6 +144,11 @@ namespace ExamApp.Application.Features.Exams
 
         public async Task<ServiceResult<List<ExamWithInstructorResponseDto>>> GetActiveExamsAsync()
         {
+            //cache aside design pattern uygulama
+            // 1. any cache
+            // 2. if not cache => get data from db
+            // 3. set cache
+
             var examResponse = await cacheService.GetAsync<List<ExamWithInstructorResponseDto>>(ActiveExamsCacheKey);
             if (examResponse is not null)
             {

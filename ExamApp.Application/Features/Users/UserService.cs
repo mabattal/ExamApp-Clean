@@ -15,8 +15,7 @@ namespace ExamApp.Application.Features.Users
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IPasswordHasher passwordHasher,
-        ICacheService cacheService) : IUserService
+        IPasswordHasher passwordHasher) : IUserService
     {
         private const string PagedUserListCacheKey = "PagedUserListCacheKey";
 
@@ -46,21 +45,9 @@ namespace ExamApp.Application.Features.Users
 
             #endregion
 
-            //cache aside design pattern uygulama
-            // 1. any cache
-            // 2. if not cache => get data from db
-            // 3. set cache
-
-            var pagedUserListAsCached = await cacheService.GetAsync<List<UserResponseDto>>(PagedUserListCacheKey + pageNumber + pageSize);
-            if (pagedUserListAsCached is not null)
-            {
-                return ServiceResult<List<UserResponseDto>>.Success(pagedUserListAsCached);
-            }
-
             var users = await userRepository.GetAllPagedAsync(pageNumber, pageSize);
             var userAsDto = mapper.Map<List<UserResponseDto>>(users);
 
-            await cacheService.AddAsync(PagedUserListCacheKey + pageNumber + pageSize, userAsDto, TimeSpan.FromMinutes(1));
             return ServiceResult<List<UserResponseDto>>.Success(userAsDto);
         }
 
