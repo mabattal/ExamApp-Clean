@@ -17,8 +17,6 @@ namespace ExamApp.Application.Features.Users
         IMapper mapper,
         IPasswordHasher passwordHasher) : IUserService
     {
-        private const string PagedUserListCacheKey = "PagedUserListCacheKey";
-
         public async Task<ServiceResult<List<UserResponseDto>>> GetAllAsync()
         {
             var users = await userRepository.GetAllAsync();
